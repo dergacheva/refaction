@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Net;
 using System.Web.Http;
-using ProductAPI.Models;
-using System.Linq;
-using AutoMapper;
 using ProductAPI.Services;
+
+using ContractProducts = ProductAPI.Models.Products;
+using ContractProduct = ProductAPI.Models.Product;
+
+using ContractProductOptions = ProductAPI.Models.ProductOptions;
+using ContractProductOption = ProductAPI.Models.ProductOption;
+using ProductAPI.Validation;
 
 namespace ProductAPI.Controllers
 {
@@ -22,83 +26,134 @@ namespace ProductAPI.Controllers
 
         [Route]
         [HttpGet]
-        public Products GetAll()
+        public ContractProducts GetAll()
         {
             return _productService.Get();
         }
 
         [Route]
         [HttpGet]
-        public Products SearchByName(string name)
+        public ContractProducts SearchByName(string name)
         {
             return _productService.GetByName(name);
         }
 
         [Route("{id}")]
         [HttpGet]
-        public Models.Product GetProduct(Guid id)
+        public ContractProduct GetProduct(Guid id)
         {
             var product = _productService.GetById(id);
             if (product == null)
+            {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
 
             return product;
         }
 
         [Route]
         [HttpPost]
-        public void Create(Models.Product product)
+        public void Create(ContractProduct product)
         {
-            _productService.Create(product);
+            try
+            {
+                _productService.Create(product);
+            }
+            catch (InvalidAPIRequestException)
+            {
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
+            }
         }
 
         [Route("{id}")]
         [HttpPut]
-        public void Update(Guid id, Models.Product product)
+        public void Update(Guid id, ContractProduct product)
         {
-            _productService.Update(product);
+            try
+            {
+                _productService.Update(product);
+            }
+            catch (InvalidAPIRequestException)
+            {
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
+            }
         }
 
         [Route("{id}")]
         [HttpDelete]
         public void Delete(Guid id)
         {
-            _productService.Delete(id);
+            try
+            {
+                _productService.Delete(id);
+            }
+            catch (InvalidAPIRequestException)
+            {
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
+            }
         }
 
         [Route("{productId}/options")]
         [HttpGet]
-        public ProductOptions GetOptions(Guid productId)
+        public ContractProductOptions GetOptions(Guid productId)
         {
             return _productOptionService.GetByProductId(productId);
         }
 
         [Route("{productId}/options/{id}")]
         [HttpGet]
-        public Models.ProductOption GetOption(Guid productId, Guid id)
+        public ContractProductOption GetOption(Guid productId, Guid id)
         {
-            return _productOptionService.GetById(id);
+            var option = _productOptionService.GetById(id);
+            if (option == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            return option;
+
         }
 
         [Route("{productId}/options")]
         [HttpPost]
-        public void CreateOption(Guid productId, Models.ProductOption option)
+        public void CreateOption(Guid productId, ContractProductOption option)
         {
-            _productOptionService.Create(option);
+            try
+            {
+                _productOptionService.Create(option);
+            }
+            catch (InvalidAPIRequestException)
+            {
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
+            }
         }
 
         [Route("{productId}/options/{id}")]
         [HttpPut]
-        public void UpdateOption(Guid id, Models.ProductOption option)
+        public void UpdateOption(Guid id, ContractProductOption option)
         {
-            _productOptionService.Update(option);
+            try
+            {
+                _productOptionService.Update(option);
+            }
+            catch (InvalidAPIRequestException)
+            {
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
+            }
         }
 
         [Route("{productId}/options/{id}")]
         [HttpDelete]
         public void DeleteOption(Guid id)
         {
-            _productOptionService.DeleteById(id);
+            try
+            {
+                _productOptionService.DeleteById(id);
+            }
+            catch (InvalidAPIRequestException)
+            {
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
+            }
         }
     }
 }

@@ -28,14 +28,17 @@ namespace ProductAPI.FunctionalTests.StepDefinitions
             switch (body)
             {
                 case "CreatedProduct":
-                    _testContext.CreatedProduct = new Product()
+                    if (_testContext.CreatedProduct == null)
                     {
-                        Id = Guid.NewGuid(),
-                        Name = "Automated test product",
-                        Description = "Created for testing",
-                        Price = 5,
-                        DeliveryPrice = 1
-                    };
+                        _testContext.CreatedProduct = new Product()
+                        {
+                            Id = Guid.NewGuid(),
+                            Name = "Automated test product",
+                            Description = "Created for testing",
+                            Price = 5,
+                            DeliveryPrice = 1
+                        };
+                    }
                     _testContext.Request.AddJsonBody(_testContext.CreatedProduct);
                     break;
                 case "UpdatedProduct":
@@ -50,13 +53,16 @@ namespace ProductAPI.FunctionalTests.StepDefinitions
                     _testContext.Request.AddJsonBody(_testContext.UpdatedProduct);
                     break;
                 case "CreatedOption":
-                    _testContext.CreatedOption = new ProductOption()
+                    if (_testContext.CreatedOption == null)
                     {
-                        Id = Guid.NewGuid(),
-                        Name = "Automated test option",
-                        Description = "Created option description",
-                        ProductId = _testContext.CreatedProduct.Id
-                    };
+                        _testContext.CreatedOption = new ProductOption()
+                        {
+                            Id = Guid.NewGuid(),
+                            Name = "Automated test option",
+                            Description = "Created option description",
+                            ProductId = _testContext.CreatedProduct.Id
+                        };
+                    }
                     _testContext.Request.AddJsonBody(_testContext.CreatedOption);
                     break;
                 case "UpdatedOption":
@@ -80,11 +86,23 @@ namespace ProductAPI.FunctionalTests.StepDefinitions
             When("I call \"Products\" endpoint with \"no\" query");
         }
 
+        [Given(@"I have not created a new product")]
+        public void GivenIHaveNotCreatedANewProduct()
+        {
+            Given("an http request with \"POST\" verb and \"CreatedProduct\" body");
+        }
+
         [Given(@"I have created a new product option")]
         public void GivenIHaveCreatedANewProductOption()
         {
             Given("an http request with \"POST\" verb and \"CreatedOption\" body");
             When("I call \"Options\" endpoint with \"no\" query");
+        }
+
+        [Given(@"I have not created a new product option")]
+        public void GivenIHaveNotCreatedANewProductOption()
+        {
+            Given("an http request with \"POST\" verb and \"CreatedOption\" body");
         }
 
         [When(@"I call ""(.*)"" endpoint with ""(.*)"" query")]
@@ -165,6 +183,17 @@ namespace ProductAPI.FunctionalTests.StepDefinitions
         public void ThenIGetNoContentResponse()
         {
             Assert.AreEqual(HttpStatusCode.NoContent, _testContext.Response.StatusCode);
+        }
+        [Then(@"I get BadRequest response")]
+        public void ThenIGetBadRequestResponse()
+        {
+            Assert.AreEqual(HttpStatusCode.BadRequest, _testContext.Response.StatusCode);
+        }
+
+        [Then(@"I get NotFound response")]
+        public void ThenIGetNotFoundResponse()
+        {
+            Assert.AreEqual(HttpStatusCode.NotFound, _testContext.Response.StatusCode);
         }
 
         [AfterScenario]

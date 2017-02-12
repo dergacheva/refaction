@@ -123,3 +123,6 @@ Desktop.ini
 **/packages/OctoPack*/license.txt
 **/packages/OctoPack*/tools/Install.ps1
 **/packages/OctoPack*/tools/Uninstall.ps1
+
+# Test results
+**/TestResults/**

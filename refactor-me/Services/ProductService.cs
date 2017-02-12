@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using ProductAPI.Models;
+using ProductAPI.Validation;
 using System;
 using System.Linq;
 
@@ -35,6 +36,11 @@ namespace ProductAPI.Services
 
         public void Create(Models.Product product)
         {
+            var original = _dbContext.Products.Find(product.Id);
+            if (original != null)
+            {
+                throw new InvalidAPIRequestException("Id is not unique");
+            }
             var domainProduct = Mapper.Map<Product>(product);
             _dbContext.Products.Add(domainProduct);
             _dbContext.SaveChanges();
@@ -45,11 +51,13 @@ namespace ProductAPI.Services
             var updated = Mapper.Map<Product>(product);
             var original = _dbContext.Products.Find(updated.Id);
 
-            if (original != null)
+            if (original == null)
             {
-                _dbContext.Entry(original).CurrentValues.SetValues(updated);
-                _dbContext.SaveChanges();
+                throw new InvalidAPIRequestException("Product does not exist");
             }
+
+            _dbContext.Entry(original).CurrentValues.SetValues(updated);
+            _dbContext.SaveChanges();
         }
 
         public void Delete(Guid id)
@@ -57,7 +65,9 @@ namespace ProductAPI.Services
             var original = _dbContext.Products.Find(id);
 
             if (original == null)
-                return;
+            {
+                throw new InvalidAPIRequestException("Product does not exist");
+            }
             _productOptionService.DeleteByProductId(id);
             _dbContext.Products.Remove(original);
             _dbContext.SaveChanges();

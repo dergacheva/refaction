@@ -8,6 +8,12 @@ Scenario: Create a new product
 	When I call "Products" endpoint with "no" query
 	Then I get NoContent response
 
+Scenario: Create a new product with existing id
+	Given I have created a new product
+	Given an http request with "POST" verb and "CreatedProduct" body
+	When I call "Products" endpoint with "no" query
+	Then I get BadRequest response
+
 Scenario: Get list of products
 	Given I have created a new product
 	Given an http request with "GET" verb and "no" body
@@ -29,11 +35,23 @@ Scenario: Get product by id
 	Then the result should include product
     And I get OK response
 
+Scenario: Get product by invalid id
+	Given I have not created a new product
+	Given an http request with "GET" verb and "no" body
+	When I call "ProductsById" endpoint with "no" query
+    Then I get NotFound response
+
 Scenario: Update product by id
 	Given I have created a new product
 	Given an http request with "PUT" verb and "UpdatedProduct" body
 	When I call "ProductsById" endpoint with "no" query
 	Then I get NoContent response
+
+Scenario: Update product by invalid id
+	Given I have not created a new product
+	Given an http request with "PUT" verb and "UpdatedProduct" body
+	When I call "ProductsById" endpoint with "no" query
+	Then I get BadRequest response
 
 Scenario: Delete product
 	Given I have created a new product
@@ -41,11 +59,24 @@ Scenario: Delete product
 	When I call "ProductsById" endpoint with "no" query
 	Then I get NoContent response
 
+Scenario: Delete product by invalid id
+	Given I have not created a new product
+	Given an http request with "DELETE" verb and "no" body
+	When I call "ProductsById" endpoint with "no" query
+	Then I get BadRequest response
+
 Scenario: Create a new option
 	Given I have created a new product
 	Given an http request with "POST" verb and "CreatedOption" body
 	When I call "Options" endpoint with "no" query
 	Then I get NoContent response
+
+Scenario: Create a new option with existing id
+	Given I have created a new product
+	Given I have created a new product option
+	Given an http request with "POST" verb and "CreatedOption" body
+	When I call "Options" endpoint with "no" query
+	Then I get BadRequest response
 
 Scenario: Get list of product options
 	Given I have created a new product
@@ -63,6 +94,13 @@ Scenario: Get product option by id
 	Then the result should include product option
     And I get OK response
 
+Scenario: Get product option by invalid id
+	Given I have created a new product
+	Given I have not created a new product option
+	Given an http request with "GET" verb and "no" body
+	When I call "OptionsById" endpoint with "no" query
+	Then I get NotFound response
+
 Scenario: Update product option by id
 	Given I have created a new product
 	Given I have created a new product option
@@ -70,9 +108,23 @@ Scenario: Update product option by id
 	When I call "OptionsById" endpoint with "no" query
 	Then I get NoContent response
 
+Scenario: Update product option by invalid id
+	Given I have created a new product
+	Given I have not created a new product option
+	Given an http request with "PUT" verb and "UpdatedOption" body
+	When I call "OptionsById" endpoint with "no" query
+	Then I get BadRequest response
+
 Scenario: Delete product option
 	Given I have created a new product
 	Given I have created a new product option
 	Given an http request with "DELETE" verb and "no" body
 	When I call "OptionsById" endpoint with "no" query
 	Then I get NoContent response
+
+Scenario: Delete product option by invalid id
+	Given I have created a new product
+	Given I have not created a new product option
+	Given an http request with "DELETE" verb and "no" body
+	When I call "OptionsById" endpoint with "no" query
+	Then I get BadRequest response

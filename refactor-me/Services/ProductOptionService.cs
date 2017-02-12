@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using ProductAPI.Models;
+using ProductAPI.Validation;
 using System;
 using System.Linq;
 
@@ -28,6 +29,11 @@ namespace ProductAPI.Services
 
         public void Create(Models.ProductOption option)
         {
+            var original = _dbContext.ProductOptions.Find(option.Id);
+            if (original != null)
+            {
+                throw new InvalidAPIRequestException("Id is not unique");
+            }
             var domainOption = Mapper.Map<ProductOption>(option);
             _dbContext.ProductOptions.Add(domainOption);
             _dbContext.SaveChanges();
@@ -38,7 +44,10 @@ namespace ProductAPI.Services
             var updated = Mapper.Map<ProductOption>(option);
             var original = _dbContext.ProductOptions.Find(updated.Id);
 
-            if (original == null) return;
+            if (original == null)
+            {
+                throw new InvalidAPIRequestException("Option does not exist");
+            }
 
             _dbContext.Entry(original).CurrentValues.SetValues(updated);
             _dbContext.SaveChanges();
@@ -48,7 +57,9 @@ namespace ProductAPI.Services
         {
             var original = _dbContext.ProductOptions.Find(id);
             if (original == null)
-                return;
+            {
+                throw new InvalidAPIRequestException("Option does not exist");
+            }
             _dbContext.ProductOptions.Remove(original);
             _dbContext.SaveChanges();
         }
