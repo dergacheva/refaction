@@ -5,6 +5,7 @@ using System.Web;
 using System.IO;
 using Ninject.Parameters;
 using System.Data.Entity.Core.EntityClient;
+using ProductAPI.Services;
 
 namespace ProductAPI
 {
@@ -13,6 +14,8 @@ namespace ProductAPI
         public override void Load()
         {
             Bind<ProductDBContext>().ToSelf().InRequestScope();
+            Bind<IProductOptionService>().To<ProductOptionService>();
+            Bind<IProductService>().To<ProductService>();
         }
     }
 }
