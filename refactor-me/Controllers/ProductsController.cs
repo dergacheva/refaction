@@ -1,115 +1,138 @@
 ﻿using System;
 using System.Net;
 using System.Web.Http;
-using refactor_me.Models;
+using ProductAPI.Models;
+using System.Linq;
+using AutoMapper;
 
-namespace refactor_me.Controllers
+namespace ProductAPI.Controllers
 {
     [RoutePrefix("products")]
     public class ProductsController : ApiController
     {
+        private readonly ProductDBContext _dbContext;
+
+        public ProductsController(ProductDBContext dbContext)
+        {
+            _dbContext = dbContext;
+        }
+
         [Route]
         [HttpGet]
         public Products GetAll()
         {
-            return new Products();
+            return Mapper.Map<Products>(_dbContext.Products.ToList());
         }
 
         [Route]
         [HttpGet]
         public Products SearchByName(string name)
         {
-            return new Products(name);
+            var products = _dbContext.Products.Where(x => x.Name.ToLower().Contains(name.ToLower())).ToList();
+            return Mapper.Map<Products>(products);
         }
 
         [Route("{id}")]
         [HttpGet]
-        public Product GetProduct(Guid id)
+        public Models.Product GetProduct(Guid id)
         {
-            var product = new Product(id);
-            if (product.IsNew)
+            var product = _dbContext.Products.Find(id);
+            if (product == null)
                 throw new HttpResponseException(HttpStatusCode.NotFound);
 
-            return product;
+            return Mapper.Map<Models.Product>(product);
         }
 
         [Route]
         [HttpPost]
-        public void Create(Product product)
+        public void Create(Models.Product product)
         {
-            product.Save();
+            var domainProduct = Mapper.Map<Product>(product);
+            _dbContext.Products.Add(domainProduct);
+            _dbContext.SaveChanges();
         }
 
         [Route("{id}")]
         [HttpPut]
-        public void Update(Guid id, Product product)
+        public void Update(Guid id, Models.Product product)
         {
-            var orig = new Product(id)
-            {
-                Name = product.Name,
-                Description = product.Description,
-                Price = product.Price,
-                DeliveryPrice = product.DeliveryPrice
-            };
+            var updated = Mapper.Map<Product>(product);
+            var original = _dbContext.Products.Find(id);
 
-            if (!orig.IsNew)
-                orig.Save();
+            if (original != null)
+            {
+                _dbContext.Entry(original).CurrentValues.SetValues(updated);
+                _dbContext.SaveChanges();
+            }
         }
 
         [Route("{id}")]
         [HttpDelete]
         public void Delete(Guid id)
         {
-            var product = new Product(id);
-            product.Delete();
+            var original = _dbContext.Products.Find(id);
+
+            if (original != null)
+            {
+                _dbContext.ProductOptions.RemoveRange(_dbContext.ProductOptions.Where(x => x.ProductId == id));
+                _dbContext.Products.Remove(original);
+                _dbContext.SaveChanges();
+            }
         }
 
         [Route("{productId}/options")]
         [HttpGet]
         public ProductOptions GetOptions(Guid productId)
         {
-            return new ProductOptions(productId);
+            var options = _dbContext.ProductOptions.Where(x => x.ProductId == productId).ToList();
+            return Mapper.Map<ProductOptions>(options);
         }
 
         [Route("{productId}/options/{id}")]
         [HttpGet]
-        public ProductOption GetOption(Guid productId, Guid id)
+        public Models.ProductOption GetOption(Guid productId, Guid id)
         {
-            var option = new ProductOption(id);
-            if (option.IsNew)
+            var option = _dbContext.ProductOptions.Find(id);
+            if (option == null)
+            {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
-
-            return option;
+            }
+            return Mapper.Map<Models.ProductOption>(option);
         }
 
         [Route("{productId}/options")]
         [HttpPost]
-        public void CreateOption(Guid productId, ProductOption option)
+        public void CreateOption(Guid productId, Models.ProductOption option)
         {
-            option.ProductId = productId;
-            option.Save();
+            var domainOption = Mapper.Map<ProductOption>(option);
+            _dbContext.ProductOptions.Add(domainOption);
+            _dbContext.SaveChanges();
         }
 
         [Route("{productId}/options/{id}")]
         [HttpPut]
-        public void UpdateOption(Guid id, ProductOption option)
+        public void UpdateOption(Guid id, Models.ProductOption option)
         {
-            var orig = new ProductOption(id)
-            {
-                Name = option.Name,
-                Description = option.Description
-            };
+            var updated = Mapper.Map<ProductOption>(option);
+            var original = _dbContext.ProductOptions.Find(id);
 
-            if (!orig.IsNew)
-                orig.Save();
+            if (original != null)
+            {
+                _dbContext.Entry(original).CurrentValues.SetValues(updated);
+                _dbContext.SaveChanges();
+            }
         }
 
         [Route("{productId}/options/{id}")]
         [HttpDelete]
         public void DeleteOption(Guid id)
         {
-            var opt = new ProductOption(id);
-            opt.Delete();
+            var original = _dbContext.ProductOptions.Find(id);
+            if (original != null)
+            {
+                _dbContext.ProductOptions.Remove(original);
+                _dbContext.SaveChanges();
+            }
         }
     }
 }

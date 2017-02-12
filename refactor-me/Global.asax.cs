@@ -1,17 +1,19 @@
-﻿using System;
+﻿using ProductAPI.Infrastructure;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Http;
 using System.Web.Routing;
 
-namespace refactor_me
+namespace ProductAPI
 {
     public class WebApiApplication : System.Web.HttpApplication
     {
         protected void Application_Start()
         {
             GlobalConfiguration.Configure(WebApiConfig.Register);
+            AutoMappings.Configure();
         }
     }
 }

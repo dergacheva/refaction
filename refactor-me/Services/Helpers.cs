@@ -1,7 +1,7 @@
 ﻿using System.Data.SqlClient;
 using System.Web;
 
-namespace refactor_me.Models
+namespace ProductAPI.Services
 {
     public class Helpers
     {

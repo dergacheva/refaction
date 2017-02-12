@@ -100,9 +100,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\refactor-me\refactor-me.csproj">
+    <ProjectReference Include="..\refactor-me\ProductAPI.csproj">
       <Project>{20AB69F9-F2D3-4A68-96C3-424EC8B9406E}</Project>
-      <Name>refactor-me</Name>
+      <Name>ProductAPI</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>

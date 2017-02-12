@@ -175,7 +175,7 @@ namespace ProductAPI.FunctionalTests.StepDefinitions
             var jsonConvert = new JsonDeserializer();
             var data = jsonConvert.Deserialize<Products>(_testContext.Response);
 
-            foreach (Product product in data.Items)
+            foreach (Models.Product product in data.Items)
             {
                 Given("an http request with \"DELETE\" verb and \"no\" body");
                 var restClient = new RestClient(Endpoints.ProductsById(product.Id));
