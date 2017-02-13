@@ -11,7 +11,7 @@ namespace ProductAPI.Services
     {
         ProductOptions GetByProductId(Guid productId);
 
-        Models.ProductOption GetById(Guid id);
+        Models.ProductOption GetByProductIdAndId(Guid productId, Guid id);
 
         void Create(Models.ProductOption option);
 

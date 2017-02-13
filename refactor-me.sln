@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductAPI", "refactor-me\P
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductAPI.FunctionalTests", "ProductAPI.FunctionalTests\ProductAPI.FunctionalTests.csproj", "{63E642F3-C6FF-44C0-B7D8-270E93BC3FE7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductAPI.UnitTests", "ProductAPI.UnitTests\ProductAPI.UnitTests.csproj", "{72DC517F-3246-45D4-9829-A0E53BFBE81A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{63E642F3-C6FF-44C0-B7D8-270E93BC3FE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{63E642F3-C6FF-44C0-B7D8-270E93BC3FE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{63E642F3-C6FF-44C0-B7D8-270E93BC3FE7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{72DC517F-3246-45D4-9829-A0E53BFBE81A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72DC517F-3246-45D4-9829-A0E53BFBE81A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72DC517F-3246-45D4-9829-A0E53BFBE81A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72DC517F-3246-45D4-9829-A0E53BFBE81A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

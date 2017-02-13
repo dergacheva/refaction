@@ -152,7 +152,6 @@
     <Compile Include="Models\ProductOptions.cs" />
     <Compile Include="Data\Product.cs" />
     <Compile Include="Data\ProductOption.cs" />
-    <Compile Include="Services\Helpers.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="Models\Products.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

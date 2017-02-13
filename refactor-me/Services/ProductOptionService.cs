@@ -21,9 +21,9 @@ namespace ProductAPI.Services
             return Mapper.Map<ProductOptions>(options);
         }
 
-        public Models.ProductOption GetById(Guid id)
+        public Models.ProductOption GetByProductIdAndId(Guid productId, Guid id)
         {
-            var option = _dbContext.ProductOptions.Find(id);
+            var option = _dbContext.ProductOptions.FirstOrDefault(x => x.Id == id && x.ProductId == productId);
             return Mapper.Map<Models.ProductOption>(option);
         }
 
@@ -49,7 +49,7 @@ namespace ProductAPI.Services
                 throw new InvalidAPIRequestException("Option does not exist");
             }
 
-            _dbContext.Entry(original).CurrentValues.SetValues(updated);
+            _dbContext.UpdateEntry(original, updated);
             _dbContext.SaveChanges();
         }
 
@@ -66,7 +66,7 @@ namespace ProductAPI.Services
 
         public void DeleteByProductId(Guid id)
         {
-            _dbContext.ProductOptions.RemoveRange(_dbContext.ProductOptions.Where(x => x.ProductId == id));
+            _dbContext.ProductOptions.RemoveRange(_dbContext.ProductOptions.Where(x => x.ProductId == id).ToList());
             _dbContext.SaveChanges();
         }
     }

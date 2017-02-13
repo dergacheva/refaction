@@ -69,6 +69,10 @@ namespace ProductAPI.Controllers
         [HttpPut]
         public void Update(Guid id, ContractProduct product)
         {
+            if(product.Id != id)
+            {
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
+            }
             try
             {
                 _productService.Update(product);
@@ -104,20 +108,23 @@ namespace ProductAPI.Controllers
         [HttpGet]
         public ContractProductOption GetOption(Guid productId, Guid id)
         {
-            var option = _productOptionService.GetById(id);
+            var option = _productOptionService.GetByProductIdAndId(productId, id);
             if (option == null)
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
             return option;
-
         }
 
         [Route("{productId}/options")]
         [HttpPost]
         public void CreateOption(Guid productId, ContractProductOption option)
         {
+            if (option.ProductId != productId)
+            {
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
+            }
             try
             {
                 _productOptionService.Create(option);
@@ -130,8 +137,12 @@ namespace ProductAPI.Controllers
 
         [Route("{productId}/options/{id}")]
         [HttpPut]
-        public void UpdateOption(Guid id, ContractProductOption option)
+        public void UpdateOption(Guid productId, Guid id, ContractProductOption option)
         {
+            if (option.ProductId != productId)
+            {
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
+            }
             try
             {
                 _productOptionService.Update(option);

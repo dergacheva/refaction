@@ -18,5 +18,10 @@ namespace ProductAPI
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
         }
+
+        public virtual void UpdateEntry<T>(T original, T updated) where T : class
+        {
+            Entry(original).CurrentValues.SetValues(updated);
+        }
     }
 }

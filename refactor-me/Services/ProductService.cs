@@ -56,7 +56,7 @@ namespace ProductAPI.Services
                 throw new InvalidAPIRequestException("Product does not exist");
             }
 
-            _dbContext.Entry(original).CurrentValues.SetValues(updated);
+            _dbContext.UpdateEntry(original, updated);
             _dbContext.SaveChanges();
         }
 
