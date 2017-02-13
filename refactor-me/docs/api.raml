@@ -1,0 +1,171 @@
+#%RAML 1.0
+
+title: Product
+version: 1.0.0
+baseUri: https://products.host.com
+
+/api:
+  displayName: Product API
+
+  /products:
+    get:
+      description: Gets all products optionally filtered by name.
+      queryParameters:
+        name:
+         displayName: Name
+         type: string
+         description: Product name filter
+         example: Microsoft
+         required: false
+      responses:
+        200:
+          description: Request executed successfully.
+          body:
+            application/json:
+              example: |
+                    {
+                      "Items": [
+                        {
+                          "Id": "01234567-89ab-cdef-0123-456789abcdef",
+                          "Name": "Product name",
+                          "Description": "Product description",
+                          "Price": 123.45,
+                          "DeliveryPrice": 12.34
+                        }
+                      ]
+                    }
+    post:
+      description: Creates a new product.
+      body:
+        application/json:
+          example: |
+            {
+              "Id": "01234567-89ab-cdef-0123-456789abcdef",
+              "Name": "Product name",
+              "Description": "Product description",
+              "Price": 123.45,
+              "DeliveryPrice": 12.34
+            }
+      responses:
+        204:
+          description: Request executed successfully.
+        400:
+          description: Product already exists.
+    /{id}:
+      uriParameters:
+        id:
+          type: string
+          description: Product Id - a GUID.
+      get:
+        description: Gets the product that matches the specified ID.
+        responses:
+          200:
+            description: Request executed successfully.
+            body:
+              application/json:
+                example: |
+                  {
+                    "Id": "01234567-89ab-cdef-0123-456789abcdef",
+                    "Name": "Product name",
+                    "Description": "Product description",
+                    "Price": 123.45,
+                    "DeliveryPrice": 12.34
+                  }
+          404:
+            description: Product not found.
+      put:
+        description: Updates a product.
+        body:
+          application/json:
+            example: |
+              {
+                "Id": "01234567-89ab-cdef-0123-456789abcdef",
+                "Name": "Product name",
+                "Description": "Product description",
+                "Price": 123.45,
+                "DeliveryPrice": 12.34
+              }
+        responses:
+          204:
+            description: Request executed successfully.
+          400: 
+            description: Invalid id.
+      delete:
+        description: Deletes a product and its options.
+        responses:
+          204:
+            description: Request executed successfully.
+          400:
+            description: Incorrect id was sent.
+      /options:
+        get:
+          description: Finds all options for a specified product.
+          responses:
+            200:
+              description: Request executed successfully.
+              body:
+                application/json:
+                  example: |
+                    {
+                      "Items": [
+                        {
+                          "Id": "01234567-89ab-cdef-0123-456789abcdef",
+                          "Name": "Product option name",
+                          "Description": "Product option description"
+                        }
+                      ]
+                    }                  
+        post:
+          description: Adds a new product option to the specified product.
+          body:
+            application/json:
+              example: |
+               {
+                  "Id": "01234567-89ab-cdef-0123-456789abcdef",
+                  "Name": "Product option name",
+                  "Description": "Product option description"
+                }
+          responses:
+            204:
+              description: Request executed successfully.
+            400:
+              description: Option already exists.
+        /{optionId}:
+          get:
+            description: Finds the specified product option for the specified product.
+            responses:
+              200:
+                description: Request executed successfully.
+                body:
+                  application/json:
+                    example: |
+                     {
+                        "Id": "01234567-89ab-cdef-0123-456789abcdef",
+                        "Name": "Product option name",
+                        "Description": "Product option description"
+                      }
+              404:
+                description: Option not found.
+          put:
+            description: Updates the specified product option.
+            body:
+              application/json:
+                example: |
+                 {
+                    "Id": "01234567-89ab-cdef-0123-456789abcdef",
+                    "Name": "Product option name",
+                    "Description": "Product option description"
+                  }
+            responses:
+              204:
+                description: Request executed successfully. 
+              400:
+                description: Option id mismatch.
+          delete:
+            description: Deletes the specified product option.
+            responses:
+              204:
+                description: Request executed successfully.      
+              400:
+                description: Option id mismatch.
+           

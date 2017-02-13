@@ -124,5 +124,11 @@ Desktop.ini
 **/packages/OctoPack*/tools/Install.ps1
 **/packages/OctoPack*/tools/Uninstall.ps1
 
+# Node modules
+**/node_modules/**
+
+# Generated docs
+**/docs/index.html
+
 # Test results
 **/TestResults/**
