@@ -16,7 +16,7 @@ There should be these endpoints:
 
 1. `GET /products` - gets all products.
 2. `GET /products?name={name}` - finds all products matching the specified name.
-3. `GET /products/{id}` - gets the project that matches the specified ID - ID is a GUID.
+3. `GET /products/{id}` - gets the product that matches the specified ID - ID is a GUID.
 4. `POST /products` - creates a new product.
 5. `PUT /products/{id}` - updates a product.
 6. `DELETE /products/{id}` - deletes a product and its options.
